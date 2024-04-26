@@ -5,20 +5,29 @@
 
  beepcore.js
 
+    wavetype 0,1,2,3  /  -1: LFOoff
+    wave = ["sine", "square", "sawtooth", "triangle"];
+
+   CREATE SYSTEM
     const beep = new beepcore();
 
-    beep.on();
-    beep.off();
-    beep.sound();
+   SYSTEM SETUP
+    beep.masterVolume( vol);// vol = 0.0-1.0
 
-    .on = function(Freq = 440, duration = 0.1) 
-  
+    beep.oscSetup( wavetype ); // wavetype = 0-3
+
+    beep.lfoSetup(Freq, wavetype, depth);  //Freq(Hz), wavetype,depth:number
+    beep.lfoReset(); //Not Use LFO    
+
+   NOTE CREATE
+    const note = beep.noteCreate(Freq);
+
+   VOICE PLAY
+    note.on(volume, delay);//volume 0.0-1.0, delay noteon timing (sec) 
+    note.off(duration); //duration noteoff timing(sec)
+
+     DEFAULT
+    .on = function(volume = 1, delay = 0) 
     .off = function(time = 0) //after stop time: sec
-
-    .sound(Freq, WaveType, Volume, lfo:{Freq, WaveType, depth}  )
-    .sound = function(Freq=440, form=0, Volume=0.5, lfoparam = {Freq:0, WaveType:-1, depth:0})
-
-    WaveType 0,1,2,3  /  -1: LFOoff
-    wave = ["sine", "square", "sawtooth", "triangle"];
 
     

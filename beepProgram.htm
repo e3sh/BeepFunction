@@ -8,13 +8,14 @@
 <script>
 
 let  b;
+
 let osc;
 let lfo;
 let dur;
 
 
 function main(){
-    //b = new Beepcore();
+    b = new Beepcore();
 
     osc = {
         freq:document.getElementById("OSCFreq")
@@ -48,16 +49,27 @@ function main(){
         
     }
     */
+    dummyfunc();
+
+    function dummyfunc(t){
+
+        //document.getElementById("dsp_e").innerHTML = t;
+        statusdraw();
+        durdraw();
+
+        requestAnimationFrame(arguments.callee);    
+    };
+    //requestAnimationFrame(dummyfunc);
 }
 
 function statusdraw(e){
-    console.log(e?.target.id + e?.target.value);
+    //console.log(e?.target.id + e?.target.value);
     
     document.getElementById("dsp_e").innerHTML = "OSC)Freq:" + osc.freq.value 
-    + ", WaveType:" + osc.wave.value + ", Volume:" + osc.volume.value;
+    + "Hz, WaveType:" + osc.wave.value + ", Volume:" + osc.volume.value/10;
 
     document.getElementById("dsp_r").innerHTML = "LFO)Freq:" + lfo.freq.value 
-    + ", WaveType:" + lfo.wave.value + ",Depth:" + lfo.depth.value;
+    + "Hz, WaveType:" + lfo.wave.value + ",Depth:" + lfo.depth.value;
     
 }
 
@@ -67,8 +79,19 @@ function durdraw(){
 
 function start_r(){
 
-    b = new Beepcore();
+    b.masterVolume(osc.volume.value/10);
+    b.oscSetup(osc.wave.value);
+    if (lfo.wave.value == -1){
+        b.lfoReset();
+    }else{
+        b.lfoSetup(lfo.freq.value, lfo.wave.value,  lfo.depth.value);
+    }
+    const note = b.createNote(osc.freq.value);
 
+    note.on();
+    note.off(dur.value/100);
+
+    /*
     b.sound(
         osc.freq.value, osc.wave.value, osc.volume.value/10,
         {
@@ -78,42 +101,52 @@ function start_r(){
         }
     );
     b.off(dur.value/100);
-    //beep(Freq, duration, volume);
-
-    //let b = new Beepcore();
-    //b.on(480,1);
-    //b.sound(300,"square",0.2);
-    //b.off(0.1);
-    //b.sound(440, 2, 0.2, {Freq:100, WaveType:0,depth:50});
-    //b.off(0.3);
-    //b.sound(340, 4, 0.2, {Freq:100, WaveType:0,depth:50});
-    //b.off(0.3);
+    */
 }
 
 function pipo_r(){
 
-    b = new Beepcore();
+    b.oscSetup(0);
 
+    const noteA = b.createNote(1000);
+    const noteB = b.createNote(2000);
+
+    noteA.on(1,0);
+    noteA.off(0.1);
+
+    noteB.on(1,0.1);
+    noteB.off(0.2);
+
+    /*
     b.sound(1000, 0, 0.2);
     b.off(0.1);
 
-    b.sound(2000, 0, 0.2);
+    b.sound(2000, 0, 0.2,null,0.1);
     b.off(0.2);
+    */
 }
 
 function boo_r(){
 
-    b = new Beepcore();
+    b.oscSetup(2);
 
-    b.sound(261.626, 2, 0.2);b.off(0.2);
-    b.sound(440, 2, 0.2);b.off(0.2);
-    b.sound(523.251, 2, 0.2);b.off(0.2);
+    const noteA = b.createNote(261.626);
+    const noteB = b.createNote(440);
+    const noteC = b.createNote(523.251);
+
+    noteA.on(1);     noteA.off(0.1);
+    noteB.on(1,0.1); noteB.off(0.2);
+    noteC.on(1,0.2); noteC.off(0.3);
+    /*
+    b.sound(261.626, 2, 0.2);b.off(0.1);
+    b.sound(440, 2, 0.2,null,0.1);;b.off(0.2);
+    b.sound(523.251, 2, 0.2,null,0.2);b.off(0.3);
+    */
 }
 
 function set_oscFreq(f){
     document.getElementById("OSCFreq").value = f;
     statusdraw();
-
 }
 
 </script>
@@ -121,9 +154,7 @@ function set_oscFreq(f){
 <body onLoad="main()">
 BeepProgram Practice: WebAudioAPI/[LFO]->freq[OSC]->[VOL]->Output
 <hr>
-.sound(Freq, WaveType, Volume [,lfo:{Freq, WaveType, depth}] ) <br>
-WaveType: 0:sine, 1:square, 2:sawtooth, 3:triangle<br>
-Volume : 0.0 - 1.0<br>
+WaveType: 0:sine, 1:square, 2:sawtooth, 3:triangle ,Volume : 0.0 - 1.0<br>
 <hr>
 <input type="button" id="btn" value="ring" onclick="start_r()">
 duration<input type="range" id="dur" min="0" max="100" value="50">
@@ -156,19 +187,19 @@ Freq<input type="range" id="LFOFreq" min="1" max="50" value="10">
 GUIDE<br>
 <table>
     <tr><th>No</th><th>Freq</th><th>Note</th><th></th></tr>
-    <tr><td> 1</td><td>27.500</td><td>A0</td><td><input type="button"    id="btn" value="set" onclick="set_oscFreq(  27.500);"></td></tr>
+<!--    <tr><td> 1</td><td>27.500</td><td>A0</td><td><input type="button"    id="btn" value="set" onclick="set_oscFreq(  27.500);"></td></tr>
     <tr><td> 4</td><td>32.703</td><td>C1</td><td><input type="button"    id="btn" value="set" onclick="set_oscFreq(  37.703);"></td></tr>
     <tr><td>13</td><td>55.000</td><td> A1</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq(  55.000);"></td></tr>	
     <tr><td>16</td><td>65.406</td><td> C2</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq(  65.406);"></td></tr>	
     <tr><td>25</td><td>110.000</td><td>A2</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq( 110.000);"></td></tr>	
     <tr><td>28</td><td>130.813</td><td>C3</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq( 130.813);"></td></tr>	
     <tr><td>37</td><td>220.000</td><td>A3</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq( 220.000);"></td></tr>	
-    <tr><td>40</td><td>261.626</td><td>C4</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq( 261.626);"></td></tr>	
+    <tr><td>40</td><td>261.626</td><td>C4</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq( 261.626);"></td></tr> -->	
     <tr><td>49</td><td>440.000</td><td>A4</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq( 440.000);"></td></tr>	
-    <tr><td>52</td><td>523.251</td><td>C5</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq( 523.251);"></td></tr>	
+<!--   <tr><td>52</td><td>523.251</td><td>C5</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq( 523.251);"></td></tr>	
     <tr><td>61</td><td>880.000</td><td>A5</td><td><input type="button"  id="btn" value="set" onclick="set_oscFreq( 880.000);"></td></tr>	
     <tr><td>64</td><td>1046.502</td><td>C6</td><td><input type="button" id="btn" value="set" onclick="set_oscFreq(1046.502);"></td></tr>	
-    <tr><td>73</td><td>1760.000</td><td>A6</td><td><input type="button" id="btn" value="set" onclick="set_oscFreq(1760.000);"></td></tr>	
+    <tr><td>73</td><td>1760.000</td><td>A6</td><td><input type="button" id="btn" value="set" onclick="set_oscFreq(1760.000);"></td></tr> -->	
     <tr><td>76</td><td>2093.005</td><td>C7</td><td><input type="button" id="btn" value="set" onclick="set_oscFreq(2093.005);"></td></tr>	
     <tr><td>85</td><td>3520.000</td><td>A7</td><td><input type="button" id="btn" value="set" onclick="set_oscFreq(3520.000);"></td></tr>	
     <tr><td>88</td><td>4186.009</td><td>C8</td><td><input type="button" id="btn" value="set" onclick="set_oscFreq(4186.009);"></td></tr>	
