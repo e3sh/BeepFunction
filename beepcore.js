@@ -104,17 +104,22 @@ function Beepcore(){
     }
 
     this.step = function(now){
-      let c=0;
+      let c=0;// not use note count
+      let st=0;// playstart time on note
+      let et=0;// play end time on note
       for (let i in noteList){
-        n = noteList[i];
+        let n = noteList[i];
+        et += n.time;
+        let pt = now - starttime;
         if (!n.use){
-          if (n.time < now-starttime){
+          if ((st < pt)&&(et > pt)){
             this.changeVol(n.Vol);
             this.changeFreq(n.Freq);
             n.use = true;
           }
           c++
         }
+        st = et;
       }
       if (c==0){
         this.suspend();
@@ -243,6 +248,7 @@ function Beepcore(){
   this.masterVolume = function(vol = 0.2){
     masterVolume = vol;
   }
+  //Taskstep 
   this.step = function(now){
     for (let i in noteList){
       if (noteList[i].living){
@@ -251,6 +257,19 @@ function Beepcore(){
         noteList.splice(i,1);
       }
     }
+  } 
+
+  //Utility  
+  this.makeScore = function( namelist, time=100, vol=1){
+    //namelist  exmpl. ["G5","C6","E6","C6","D6","G6"];
+    let sc = [];
+    for (let i in namelist){
+        let n = {name:namelist[i],Freq:0,Vol:vol,time:time,use:false};
+        sc.push(n);
+    }
+    sc.push({Freq:0, Vol:0, time:100, use:false});
+
+    return sc;
   }
 }
 

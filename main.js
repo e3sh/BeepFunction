@@ -119,7 +119,7 @@ function pipo_r(){
     }
 
     const score =[
-    {Freq:1000, Vol:1, time:0, use:false}
+    {Freq:1000, Vol:1, time:100, use:false}
     ,{Freq:2000, Vol:1, time:100, use:false}
     ,{Freq:0, Vol:0, time:200, use:false}
     ]
@@ -147,25 +147,37 @@ function boo_r(){
     }
     
     //const note = b.createNote(0);
-
+    /*
     const score =[
-        {Freq:261.626, Vol:0.5, time:0, use:false}
+        {Freq:261.626, Vol:0.5, time:100, use:false}
         ,{Freq:440, Vol:0.7, time:100, use:false}
-        ,{Freq:523.251, Vol:1, time:200, use:false}
-        ,{name:"C4", Vol:0.9, time:300, use:false}
-        ,{name:"E4", Vol:0.7, time:500, use:false}
-       /*
+        ,{Freq:523.251, Vol:1, time:100, use:false}
+        ,{Freq:0, Vol:0, time:100, use:false}
+        ,{name:"C4", Vol:0.9, time:100, use:false}
+        ,{name:"E4", Vol:0.7, time:100, use:false}
     {Freq:261.626, Vol:0.5, time:0, use:false}
     ,{Freq:440, Vol:0.7, time:100, use:false}
     ,{Freq:523.251, Vol:1, time:200, use:false}
     ,{Freq:261.626, Vol:0.9, time:300, use:false}
     ,{Freq:329.628, Vol:0.7, time:500, use:false}
-    */
-        ,{name:"G4", Vol:0.5, time:700, use:false}
+
+        ,{name:"G4", Vol:0.5, time:100, use:false}
 //    ,{Freq:391.995, Vol:0.5, time:700, use:false}
-     ,{Freq:0, Vol:0, time:900, use:false}
+     ,{Freq:0, Vol:0, time:100, use:false}
     ]
-    noteB.play(score,now);
+    */
+    const scorebase =["G5","C6","E6","C6","D6","G6"];
+    /*
+    let sc = [];
+    for (let i in scorebase){
+        const n = {name:scorebase[i],Freq:0,Vol:1,time:100,use:false};
+        sc.push(n);
+    }
+    sc.push({Freq:0, Vol:0, time:100, use:false});
+    */
+    let sc = b.makeScore(scorebase, 100, 1);
+
+    noteB.play(sc,now);
 
     /*
     noteA.on(1);     noteA.off(0.1);
