@@ -49,8 +49,12 @@ function Beepcore(){
       osc.start(delay);
     }
 
-    this.mute = function(volume=1){
+    this.changeVol = function(volume=1){
       gainNode.gain.value = volume*masterVolume;
+    }
+
+    this.changeFreq = function(Freq){
+      osc.frequency.value = Freq;
     }
 
     this.off = function(dur){

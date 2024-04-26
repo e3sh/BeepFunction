@@ -12,7 +12,11 @@ let  b;
 let osc;
 let lfo;
 let dur;
+let pbend;
 
+let now;
+let vft;
+let vnote;
 
 function main(){
     b = new Beepcore();
@@ -28,6 +32,7 @@ function main(){
         ,depth:document.getElementById("LFOdepth")
     }
     dur = document.getElementById("dur");
+    pbend = document.getElementById("sFreq");
 
     osc.freq.addEventListener("change",statusdraw);
     osc.wave.addEventListener("change",statusdraw);
@@ -37,6 +42,8 @@ function main(){
     lfo.depth.addEventListener("change",statusdraw);
 
     dur.addEventListener("input",durdraw);
+    pbend.addEventListener("input",bendctrl);
+
 /*
     function statusdraw(e){
         console.log(e.target.id + e.target.value);
@@ -52,14 +59,24 @@ function main(){
     dummyfunc();
 
     function dummyfunc(t){
+        now = t;
+
+        if (vft > now){document.getElementById("slider").style.display = "block";
+        }else{
+            document.getElementById("slider").style.display = "none";
 
         //document.getElementById("dsp_e").innerHTML = t;
         statusdraw();
         durdraw();
-
+        }
         requestAnimationFrame(arguments.callee);    
     };
     //requestAnimationFrame(dummyfunc);
+}
+
+function bendctrl(){
+    document.getElementById("dsp_d").innerHTML = "Freq:" + pbend.value + "Hz";
+    vnote?.changeFreq(pbend.value);
 }
 
 function statusdraw(e){
@@ -90,6 +107,8 @@ function start_r(){
 
     note.on();
     note.off(dur.value/100);
+    vft = now + (dur.value*10);
+    vnote = note;
 
     /*
     b.sound(
@@ -146,6 +165,8 @@ function boo_r(){
 
 function set_oscFreq(f){
     document.getElementById("OSCFreq").value = f;
+    document.getElementById("sFreq").value = f;
+    bendctrl();
     statusdraw();
 }
 
@@ -156,8 +177,11 @@ BeepProgram Practice: WebAudioAPI/[LFO]->freq[OSC]->[VOL]->Output
 <hr>
 WaveType: 0:sine, 1:square, 2:sawtooth, 3:triangle ,Volume : 0.0 - 1.0<br>
 <hr>
+<div id = "slider" visibility = "false" >
+    PitchBend<input type="range" id="sFreq" min="27" max="4000" value="440">
+</div>
 <input type="button" id="btn" value="ring" onclick="start_r()">
-duration<input type="range" id="dur" min="0" max="100" value="50">
+duration<input type="range" id="dur" min="0" max="1000" value="50">
 <p id="dsp_d">0 - 1 (sec)</p>
 <hr>
 <p id="dsp_e">OSC Paramater(27-4000,0-3,0-10)</p>
