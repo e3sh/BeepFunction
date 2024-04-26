@@ -149,12 +149,20 @@ function boo_r(){
     //const note = b.createNote(0);
 
     const score =[
+        {Freq:261.626, Vol:0.5, time:0, use:false}
+        ,{Freq:440, Vol:0.7, time:100, use:false}
+        ,{Freq:523.251, Vol:1, time:200, use:false}
+        ,{name:"C4", Vol:0.9, time:300, use:false}
+        ,{name:"E4", Vol:0.7, time:500, use:false}
+       /*
     {Freq:261.626, Vol:0.5, time:0, use:false}
     ,{Freq:440, Vol:0.7, time:100, use:false}
     ,{Freq:523.251, Vol:1, time:200, use:false}
     ,{Freq:261.626, Vol:0.9, time:300, use:false}
     ,{Freq:329.628, Vol:0.7, time:500, use:false}
-    ,{Freq:391.995, Vol:0.5, time:700, use:false}
+    */
+        ,{name:"G4", Vol:0.5, time:700, use:false}
+//    ,{Freq:391.995, Vol:0.5, time:700, use:false}
      ,{Freq:0, Vol:0, time:900, use:false}
     ]
     noteB.play(score,now);

@@ -35,8 +35,6 @@ let w = {time:0,Freq:0};
 //16  7.5f  125ms
 //32  3.75f 62.5ms
 
-
-
 }
 
 function noteTable(){
