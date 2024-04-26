@@ -34,4 +34,8 @@
     .on = function(volume = 1, delay = 0) 
     .off = function(time = 0) //after stop time: sec
 
+    note.play(score, settime);score [{Freq:,Vol;,time:,use:false},..] ,settime-now
+
+    note.suspend(); volume =0; Freq = 0;
+
     

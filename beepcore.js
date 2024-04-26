@@ -9,6 +9,8 @@ function Beepcore(){
   let oscwavetype = wave[0];
   let lfo = null;
 
+  let noteList = [];
+
   function noteClass(){
 
     const ctx = new AudioContext();
@@ -20,6 +22,12 @@ function Beepcore(){
     osc.connect(gainNode).connect(ctx.destination);
 
     let masterVolume;
+
+    let noteList;
+    let starttime;
+
+    this.living = false;
+
     
     this.init = function(Freq=440, osc_wavetype="sine", lfop=null, mVol = 0.2){
     //  lfo param = {Freq:0, wavetype:"none", depth:0};
@@ -41,7 +49,10 @@ function Beepcore(){
         // lfo -> depth -> Osc.Freq
         lfo.connect(depth).connect(osc.frequency);
         lfo.start();
-      }  
+      }
+      this.living = true;
+
+      noteList = [];
     }
 
     this.on = function(volume=1, delay=0){
@@ -59,6 +70,38 @@ function Beepcore(){
 
     this.off = function(dur){
       osc?.stop(dur);
+      this.living = false;
+    }
+
+    this.suspend = function(){
+      gainNode.gain.value = 0;
+      osc.frequency.value = 0;
+    }
+
+    this.play = function(setList, now){
+      noteList = setList;
+      //[{Freq:0, Vol:0, time:0, use:false} ..]
+      starttime = now;
+    }
+
+    this.step = function(now){
+      let c=0;
+      for (let i in noteList){
+        n = noteList[i];
+        if (!n.use){
+          if (n.time < now-starttime){
+            this.changeVol(n.Vol);
+            this.changeFreq(n.Freq);
+            n.use = true;
+          }
+          c++
+        }
+      }
+      if (c==0){
+        this.suspend();
+        noteList = [];
+        //演奏終了
+      }
     }
   }
 
@@ -66,6 +109,8 @@ function Beepcore(){
 
     let note = new noteClass();
     note.init(Freq, oscwavetype, lfo, masterVolume);
+    noteList.push(note);
+    console.log(noteList.length);
     
     return note;  
   }
@@ -82,6 +127,15 @@ function Beepcore(){
 
   this.masterVolume = function(vol = 0.2){
     masterVolume = vol;
+  }
+  this.step = function(now){
+    for (let i in noteList){
+      if (noteList[i].living){
+        noteList[i].step(now);
+      }else{
+        noteList.splice(i,1);
+      }
+    }
   }
 }
 
