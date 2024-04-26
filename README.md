@@ -9,9 +9,11 @@
     wave = ["sine", "square", "sawtooth", "triangle"];
 
    CREATE SYSTEM
+
     const beep = new beepcore();
 
    SYSTEM SETUP
+
     beep.masterVolume( vol);// vol = 0.0-1.0
 
     beep.oscSetup( wavetype ); // wavetype = 0-3
@@ -20,9 +22,11 @@
     beep.lfoReset(); //Not Use LFO    
 
    NOTE CREATE
+
     const note = beep.noteCreate(Freq);
 
    VOICE PLAY
+   
     note.on(volume, delay);//volume 0.0-1.0, delay noteon timing (sec) 
     note.off(duration); //duration noteoff timing(sec)
 
