@@ -19,6 +19,7 @@ let notetable;
 let note;
 let noteP;
 let noteB;
+let noteG;
 
 //init 
 function main(){
@@ -108,7 +109,7 @@ function start_r(){
 
 function pipo_r(){
 
-    b.oscSetup(0);
+    b.oscSetup(0);//wave:sine
 
     //const noteA = b.createNote(1000);
     //const noteB = b.createNote(2000);
@@ -134,7 +135,7 @@ function pipo_r(){
 
 function boo_r(){
 
-    b.oscSetup(2);
+    b.oscSetup(2);//wave:saw
 
     /*
     const noteA = b.createNote(261.626);
@@ -184,6 +185,19 @@ function boo_r(){
     noteB.on(1,0.1); noteB.off(0.2);
     noteC.on(1,0.2); noteC.off(0.3);
     */
+}
+
+function gra_r(){
+
+    b.oscSetup(1);//wave:squ
+    if (!Boolean(noteG)){
+        noteG = b.createNote(0);
+        noteG.on(1);
+    }
+    const scorebase =["G4","C5","D5","E5","C5"];
+
+    let sc = b.makeScore(scorebase, 100, 1);
+    noteG.play(sc,now);
 }
 
 function set_oscFreq(f){
