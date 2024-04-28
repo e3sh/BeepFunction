@@ -59,6 +59,7 @@ function main(){
         now = t;
 
         b.step(now);
+        document.getElementById("dsp_busy").innerHTML = ".busy:" + noteP?.busy + "," + noteB?.busy + "," + noteG?.busy;
 
         if (vft > now){document.getElementById("slider").style.display = "block";
         }else{
